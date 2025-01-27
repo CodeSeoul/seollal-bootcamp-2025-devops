@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   database:
     image: postgres:17-alpine
@@ -12,19 +14,27 @@ services:
       - type: volume
         source: data
         target: /var/lib/postgresql/data
+    networks:
+      - seollal-bootcamp-2025-backend
 
-  db_ui:
-    image: shyim/adminerevo
-    ports:
-      - target: 8080
-        published: 8000
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    restart: always
     environment:
-      ADMINER_DEFAULT_DRIVER: pgsql
-      ADMINER_DEFAULT_SERVER: database
-      ADMINER_DEFAULT_DB: ecommerce
-      ADMINER_DEFAULT_USER: root
-      ADMINER_DEFAULT_PASSWORD: root
-      ADMINER_DESIGN: dracula
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    networks:
+      - seollal-bootcamp-2025-backend
+    ports:
+      - '80:80'
+    depends_on:
+      - database
+
+networks:
+  seollal-bootcamp-2025-backend:
+    name: seollal-bootcamp-2025-backend
+    external: true
 
 volumes:
   data:

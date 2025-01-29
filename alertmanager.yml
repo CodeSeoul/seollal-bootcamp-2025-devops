@@ -1,0 +1,14 @@
+global:
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'soma@domain.com'
+  smtp_auth_username: 'username'
+  smtp_auth_password: 'password'
+
+route:
+  receiver: 'default-receiver'
+
+receivers:
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'some@domain.com'
+        send_resolved: true

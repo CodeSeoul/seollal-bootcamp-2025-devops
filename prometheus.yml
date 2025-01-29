@@ -2,6 +2,9 @@ global:
   scrape_interval: 10s # How often to scrape targets by default.
   evaluation_interval: 10s # How often to evaluate rules.
 
+rule_files:
+  - "alert_rules.yml"
+
 alerting:
   alertmanagers:
     - static_configs:

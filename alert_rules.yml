@@ -1,0 +1,38 @@
+groups:
+  - name: python_process_alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: process_resident_memory_bytes / 1024 / 1024 > 500
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Memory Usage"
+          description: "The process is using more than 500MB of memory for over 2 minutes."
+
+      - alert: HighCPUUsage
+        expr: process_cpu_seconds_total > 10
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU Usage"
+          description: "CPU usage has exceeded 10 seconds of total CPU time."
+
+      - alert: TooManyOpenFileDescriptors
+        expr: process_open_fds > 500
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Too Many Open File Descriptors"
+          description: "Process has more than 500 open file descriptors."
+
+      - alert: HighHttp4xxRate
+        expr: rate(http_requests_total{status=~"4xx"}[1m]) > 5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High HTTP 4xx Rate"
+          description: "More than 5 HTTP 4xx responses per second in the last 1 minutes."

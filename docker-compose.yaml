@@ -1,33 +1,40 @@
 services:
-  database:
-    image: postgres:17-alpine
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: ecommerce
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus
     ports:
-      - target: 5432
-        published: 5432
+      - "9090:9090"
     volumes:
-      - type: volume
-        source: data
-        target: /var/lib/postgresql/data
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
     networks:
       - seollal-bootcamp-2025-backend
 
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: fakeemail@codeseoul.org
-      PGADMIN_DEFAULT_PASSWORD: pass
+  alertmanager:
+    container_name: alertmanager
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml
     networks:
       - seollal-bootcamp-2025-backend
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
     ports:
-      - '80:80'
+      - "3000:3000"
     depends_on:
-      - database
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    networks:
+      - seollal-bootcamp-2025-backend
 
 networks:
   seollal-bootcamp-2025-backend:
@@ -36,3 +43,4 @@ networks:
 
 volumes:
   data:
+  grafana-storage:

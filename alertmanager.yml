@@ -5,10 +5,13 @@ global:
   smtp_auth_password: 'password'
 
 route:
-  receiver: 'default-receiver'
+  receiver: discord
 
 receivers:
   - name: 'default-receiver'
     email_configs:
       - to: 'some@domain.com'
         send_resolved: true
+  - name: discord
+    discord_configs:
+      - webhook_url: https://discord.com/api/webhooks/1333988487036276766/s8yC6c15rnSDatjjXP3HdmiGYOBAUpfH8pe6VRJAmDf0xQ4mRYqJTVj_BQxo_uz1mi8h
